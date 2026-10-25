@@ -1,13 +1,13 @@
 {
-  "_doc": "Edit this file only. build.py renders it into dist/index.html. Empty strings / empty lists hide the corresponding item or section.",
+  "_doc": "Edit this file only. build.py renders it into dist/index.html. Sections/menu: About, Publications, Education, Contact. Empty values are hidden.",
   "site": {
-    "title": "Sihaun Cho",
+    "title": "Sihyun Cho",
     "description": "Undergraduate researcher in computer vision and vision-language models.",
     "url": "https://whsihaun.github.io",
     "updated": ""
   },
   "profile": {
-    "name": "Sihaun Cho",
+    "name": "Sihyun Cho",
     "name_native": "",
     "role": "Undergraduate Student",
     "affiliation": "School of Software, Kookmin University",
@@ -20,42 +20,38 @@
       "scholar": "",
       "linkedin": "",
       "twitter": ""
-    }
+    },
+    "contact_note": "TODO: e.g., Feel free to reach out about research internships or collaborations."
   },
   "about": [
     "TODO: 2–3 sentences about who you are and what you work on.",
     "TODO: What you are looking for (e.g., research internships, graduate positions)."
   ],
-  "interests": ["Visual Grounding", "Open-Vocabulary Object Detection", "Vision-Language Models", "Computer Vision"],
-  "news": [
-    {"date": "YYYY.MM", "text": "TODO: news item (paper accepted, award, internship, ...)."}
+  "interests": [
+    "Visual Grounding",
+    "Open-Vocabulary Object Detection",
+    "Vision-Language Models",
+    "Computer Vision"
   ],
   "publications": [
     {
       "title": "TODO: Paper title",
-      "authors": "Sihaun Cho, Co-author A, Co-author B",
+      "authors": "Sihyun Cho, Co-author A, Co-author B",
       "venue": "Venue Year",
       "note": "",
-      "links": {"paper": "", "code": "", "project": ""}
-    }
-  ],
-  "projects": [
-    {
-      "title": "TODO: Project title",
-      "period": "YYYY",
-      "summary": "TODO: one or two sentences describing the problem and your contribution.",
-      "image": "",
-      "tags": ["Tag"],
-      "links": {"code": "", "demo": "", "report": ""}
+      "links": {
+        "paper": "",
+        "code": "",
+        "project": ""
+      }
     }
   ],
   "education": [
-    {"period": "YYYY – Present", "title": "B.S. in Software", "place": "Kookmin University", "detail": ""}
-  ],
-  "experience": [
-    {"period": "YYYY", "title": "TODO: Position", "place": "TODO: Lab / Company", "detail": ""}
-  ],
-  "awards": [
-    {"date": "YYYY", "text": "TODO: Award name"}
+    {
+      "period": "YYYY – Present",
+      "title": "B.S. in Software",
+      "place": "Kookmin University",
+      "detail": ""
+    }
   ]
 }

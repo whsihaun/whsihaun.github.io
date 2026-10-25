@@ -74,9 +74,6 @@ def render(c):
     if c.get("interests"):
         about += '<ul class="chips">' + "".join(f"<li>{E(x)}</li>" for x in c["interests"]) + "</ul>"
 
-    news = "".join(f'<li><time>{E(n["date"])}</time><span>{text(n["text"])}</span></li>' for n in c.get("news", []))
-    news = f'<ul class="dated">{news}</ul>' if news else ""
-
     me = p["name"]
     pubs = ""
     for pub in c.get("publications", []):
@@ -86,17 +83,6 @@ def render(c):
                  f'<div class="pub-authors">{authors}</div>'
                  f'<div class="pub-venue">{E(pub.get("venue", ""))}{note}</div>{link_buttons(pub.get("links"))}</li>')
     pubs = f'<ol class="pubs">{pubs}</ol>' if pubs else ""
-
-    projects = ""
-    for pr in c.get("projects", []):
-        img = (f'<img src="{E(pr["image"])}" alt="" loading="lazy">' if pr.get("image")
-               else '<div class="thumb-placeholder" aria-hidden="true"></div>')
-        tags = "".join(f"<li>{E(t)}</li>" for t in pr.get("tags", []))
-        projects += (f'<article class="card">{img}<div class="card-body">'
-                     f'<h3>{text(pr["title"])}</h3><div class="meta">{E(pr.get("period", ""))}</div>'
-                     f'<p>{text(pr.get("summary", ""))}</p><ul class="tags">{tags}</ul>'
-                     f'{link_buttons(pr.get("links"))}</div></article>')
-    projects = f'<div class="cards">{projects}</div>' if projects else ""
 
     def timeline(rows):
         if not rows:
@@ -108,13 +94,17 @@ def render(c):
             for r in rows)
         return f'<ul class="timeline">{li}</ul>'
 
-    awards = "".join(f'<li><time>{E(a["date"])}</time><span>{text(a["text"])}</span></li>' for a in c.get("awards", []))
-    awards = f'<ul class="dated">{awards}</ul>' if awards else ""
+    contact = ""
+    if p.get("contact_note"):
+        contact += f"<p>{text(p['contact_note'])}</p>"
+    if contact_html:
+        contact += f'<div class="contacts">{contact_html}</div>'
+    elif not contact:
+        contact = '<p class="todo">TODO: add email / CV / profiles in content.json</p>'
 
     sections = [
-        ("about", "About", about), ("news", "News", news), ("publications", "Publications", pubs),
-        ("projects", "Projects", projects), ("education", "Education", timeline(c.get("education"))),
-        ("experience", "Experience", timeline(c.get("experience"))), ("awards", "Awards", awards),
+        ("about", "About", about), ("publications", "Publications", pubs),
+        ("education", "Education", timeline(c.get("education"))), ("contact", "Contact", contact),
     ]
     nav = "".join(f'<a href="#{sid}">{E(t)}</a>' for sid, t, b in sections if b)
     body = "".join(section(*x) for x in sections)
@@ -143,7 +133,6 @@ def render(c):
 <h1>{E(p["name"])}{native}</h1>
 <div class="role">{E(p["role"])}</div>
 <div class="affil">{E(p["affiliation"])}{(" · " + E(p["location"])) if p.get("location") else ""}</div>
-<div class="contacts">{contact_html}</div>
 </div></header>
 {body}
 </main>
