@@ -1,0 +1,61 @@
+{
+  "_doc": "Edit this file only. build.py renders it into dist/index.html. Empty strings / empty lists hide the corresponding item or section.",
+  "site": {
+    "title": "Sihaun Cho",
+    "description": "Undergraduate researcher in computer vision and vision-language models.",
+    "url": "https://whsihaun.github.io",
+    "updated": ""
+  },
+  "profile": {
+    "name": "Sihaun Cho",
+    "name_native": "",
+    "role": "Undergraduate Student",
+    "affiliation": "School of Software, Kookmin University",
+    "location": "Seoul, Korea",
+    "photo": "",
+    "email": "",
+    "cv": "",
+    "links": {
+      "github": "https://github.com/whsihaun",
+      "scholar": "",
+      "linkedin": "",
+      "twitter": ""
+    }
+  },
+  "about": [
+    "TODO: 2–3 sentences about who you are and what you work on.",
+    "TODO: What you are looking for (e.g., research internships, graduate positions)."
+  ],
+  "interests": ["Visual Grounding", "Open-Vocabulary Object Detection", "Vision-Language Models", "Computer Vision"],
+  "news": [
+    {"date": "YYYY.MM", "text": "TODO: news item (paper accepted, award, internship, ...)."}
+  ],
+  "publications": [
+    {
+      "title": "TODO: Paper title",
+      "authors": "Sihaun Cho, Co-author A, Co-author B",
+      "venue": "Venue Year",
+      "note": "",
+      "links": {"paper": "", "code": "", "project": ""}
+    }
+  ],
+  "projects": [
+    {
+      "title": "TODO: Project title",
+      "period": "YYYY",
+      "summary": "TODO: one or two sentences describing the problem and your contribution.",
+      "image": "",
+      "tags": ["Tag"],
+      "links": {"code": "", "demo": "", "report": ""}
+    }
+  ],
+  "education": [
+    {"period": "YYYY – Present", "title": "B.S. in Software", "place": "Kookmin University", "detail": ""}
+  ],
+  "experience": [
+    {"period": "YYYY", "title": "TODO: Position", "place": "TODO: Lab / Company", "detail": ""}
+  ],
+  "awards": [
+    {"date": "YYYY", "text": "TODO: Award name"}
+  ]
+}
