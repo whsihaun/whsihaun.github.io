@@ -74,6 +74,6 @@ footer { color: var(--muted); font-size: 13px; padding: 24px 24px 48px; border-t
   .photo { width: 104px; height: 104px; }
   h1 { font-size: 28px; }
   .timeline li { grid-template-columns: 1fr; gap: 0; }
-  .links { display: none; }
-  .topnav .brand { flex: 1; }
+  .topnav .brand { display: none; }
+  .links { gap: 14px; }
 }
