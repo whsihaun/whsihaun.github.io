@@ -27,7 +27,7 @@ a:hover { text-decoration: underline; }
 
 /* hero */
 .hero { display: flex; gap: 28px; align-items: center; padding: 48px 0 16px; }
-.photo { width: 132px; height: 132px; border-radius: 50%; object-fit: cover; flex: none; }
+.photo { width: 132px; height: 132px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; flex: none; }
 .photo.placeholder { display: grid; place-items: center; background: var(--accent-soft); color: var(--accent);
   font-size: 40px; font-weight: 650; letter-spacing: 1px; }
 h1 { font-size: 34px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.5px; }
