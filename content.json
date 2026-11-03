@@ -1,7 +1,7 @@
 {
-  "_doc": "Edit this file only. build.py renders it into dist/index.html. Sections/menu: About, Publications, Education, Contact. Empty values are hidden.",
+  "_doc": "Edit content here. build.py renders Home, About, Publications, Education, and Contact as separate static pages. Empty values are hidden.",
   "site": {
-    "title": "Sihyun Cho",
+    "title": "whsihaun",
     "description": "Undergraduate researcher in computer vision and vision-language models.",
     "url": "https://whsihaun.github.io",
     "updated": ""
@@ -13,7 +13,7 @@
     "affiliation": "School of Software, Kookmin University",
     "location": "Seoul, Korea",
     "photo": "images/profile.jpg",
-    "email": "",
+    "email": "whsihaun@gmail.com",
     "cv": "",
     "links": {
       "github": "https://github.com/whsihaun",
@@ -21,23 +21,44 @@
       "linkedin": "",
       "twitter": ""
     },
-    "contact_note": "TODO: e.g., Feel free to reach out about research internships or collaborations."
+    "contact_note": ""
   },
   "about": [
-    "TODO: 2–3 sentences about who you are and what you work on.",
-    "TODO: What you are looking for (e.g., research internships, graduate positions)."
+    "I am an undergraduate student at Kookmin University. My research interests are in computer vision and vision-language models (VLMs), with a current focus on visual grounding."
   ],
   "interests": [
-    "Visual Grounding",
-    "Open-Vocabulary Object Detection",
+    "Computer Vision",
     "Vision-Language Models",
-    "Computer Vision"
+    "Visual Grounding"
+  ],
+  "research_experience": [
+    {
+      "title": "Individual research",
+      "description": "Independently led research from problem formulation and experiment design to model implementation, evaluation, and manuscript preparation."
+    },
+    {
+      "title": "Summer research internship",
+      "description": "Extended a capstone research project and developed a journal manuscript."
+    }
   ],
   "publications": [
     {
-      "title": "TODO: Paper title",
-      "authors": "Sihyun Cho, Co-author A, Co-author B",
-      "venue": "Venue Year",
+      "title": "Pairwise relational perception with object queries for aerial visual grounding",
+      "short_title": "Pairception",
+      "authors": "Sihyun Cho, Jeongmin Cho, Youngwook Kim",
+      "venue": "Manuscript in preparation, 2026",
+      "note": "",
+      "links": {
+        "paper": "",
+        "code": "",
+        "project": ""
+      }
+    },
+    {
+      "title": "Impact of State Design on Actor Comparisons in DRL-Based Task Scheduling for Collaborative Edge Computing",
+      "short_title": "State design & actor comparisons",
+      "authors": "Sihyun Cho, Changwoo Lee",
+      "venue": "IAAI 2026 · Under review (in Korean)",
       "note": "",
       "links": {
         "paper": "",
@@ -48,8 +69,8 @@
   ],
   "education": [
     {
-      "period": "YYYY – Present",
-      "title": "B.S. in Software",
+      "period": "",
+      "title": "B.S. student in Software",
       "place": "Kookmin University",
       "detail": ""
     }

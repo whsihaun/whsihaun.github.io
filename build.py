@@ -46,101 +46,160 @@ def link_buttons(links):
     return f'<div class="btns">{"".join(out)}</div>' if out else ""
 
 
-def section(sid, title, body):
+def section(sid, number, title, body):
     if not body:
         return ""
-    return f'<section id="{sid}"><h2>{E(title)}</h2>{body}</section>'
+    return (f'<section id="{sid}" class="content-section" aria-labelledby="{sid}-title">'
+            f'<div class="section-heading"><p class="eyebrow">{number} / {E(title)}</p>'
+            f'<h2 id="{sid}-title">{E(title)}<span class="punctuation">.</span></h2></div>'
+            f'{body}</section>')
 
 
-def render(c):
+def render(c, page_id="home"):
     s, p = c["site"], c["profile"]
+    me = p["name"]
+    name_parts = me.split(" ", 1)
+    name_html = f'<span>{E(name_parts[0])}</span>'
+    if len(name_parts) > 1:
+        name_html += f'<span class="name-last">{E(name_parts[1])}<span class="punctuation" aria-hidden="true">.</span></span>'
+    initials = "".join(w[0] for w in me.split()[:2]).upper()
+    photo = (f'<img src="{E(p["photo"])}" alt="Portrait of {E(me)}" width="512" height="682" fetchpriority="high">'
+             if p.get("photo") else f'<div class="photo-placeholder">{E(initials)}</div>')
+    about = "".join(f'<p>{text(x)}</p>' for x in c.get("about", []))
+    interests = "".join(f'<li>{E(x)}</li>' for x in c.get("interests", []))
+    interests_html = f'<ul class="interests" aria-label="Research interests">{interests}</ul>' if interests else ""
+    research_link = '<a class="button button-primary" href="publications.html">View research <span aria-hidden="true">↗</span></a>' if c.get("publications") else ""
+    email_link = (f'<a class="hero-email" href="mailto:{E(p["email"])}">{icon("email")}<span>{E(p["email"])}</span></a>'
+                  if p.get("email") else "")
+    previews = ""
+    for index, pub in enumerate(c.get("publications", [])[:2], 1):
+        previews += (f'<a class="home-work-item" href="publications.html#paper-{index}">'
+                     f'<div class="home-work-topline"><span>{index:02d}</span><span aria-hidden="true">↗</span></div>'
+                     f'<h3>{text(pub.get("short_title", pub["title"]))}</h3>'
+                     f'<p class="home-work-title">{text(pub["title"])}</p>'
+                     f'<p class="home-work-status">{E(pub.get("venue", ""))}</p></a>')
+    home_work = f'<aside class="home-work" aria-label="Research in progress"><p class="eyebrow">Research in progress</p>{previews}</aside>' if previews else ""
+    facts = []
+    for label, value in (("Affiliation", p.get("affiliation")), ("Status", p.get("role")), ("Location", p.get("location"))):
+        if value:
+            facts.append(f'<div><dt>{label}</dt><dd>{E(value)}</dd></div>')
+    if p.get("email"):
+        facts.append(f'<div><dt>Email</dt><dd><a href="mailto:{E(p["email"])}">{E(p["email"])}</a></dd></div>')
+    github_url = p.get("links", {}).get("github")
+    if github_url:
+        github_name = github_url.rstrip("/").split("/")[-1]
+        facts.append(f'<div><dt>GitHub</dt><dd><a href="{E(github_url)}" rel="me noopener">{E(github_name)} <span aria-hidden="true">↗</span></a></dd></div>')
+    facts_html = f'<dl class="profile-facts">{"".join(facts)}</dl>'
+    location = f'<span>{E(p["location"])}</span>' if p.get("location") else ""
+    hero = f'''<section id="home" class="hero" aria-labelledby="hero-name">
+<div class="hero-topline"><p class="eyebrow">01 / Home</p><p class="location">{location}</p></div>
+<div class="hero-grid home-grid"><div class="hero-copy">
+<h1 id="hero-name" aria-label="{E(me)}">{name_html}</h1>
+<p class="hero-role">{E(p["role"])}</p>
+<p class="hero-affiliation">{E(p["affiliation"])}</p>
+<div class="about-copy">{about}</div>
+<div class="hero-actions">{research_link}</div>
+{email_link}
+</div>{home_work}</div>
+<div class="hero-bottom">{interests_html}<a class="scroll-link" href="about.html">About me <span aria-hidden="true">↗</span></a></div>
+</section>'''
+    profile_panel = f'''<div class="profile-panel"><div class="portrait-composition">
+<div class="portrait-orbit orbit-one" aria-hidden="true"></div><div class="portrait-orbit orbit-two" aria-hidden="true"></div>
+<div class="portrait-cross" aria-hidden="true">✦</div><div class="portrait-photo">{photo}</div>
+</div>{facts_html}</div>'''
+
+    pubs = ""
+    for index, pub in enumerate(c.get("publications", []), 1):
+        authors = E(pub.get("authors", "")).replace(E(me), f'<strong>{E(me)}</strong>')
+        note = f'<span class="pub-note">{E(pub["note"])}</span>' if pub.get("note") else ""
+        pubs += (f'<li id="paper-{index}" class="publication"><span class="publication-number" aria-hidden="true">{index:02d}</span>'
+                 f'<div class="publication-content"><h3>{text(pub["title"])}</h3>'
+                 f'<p class="pub-authors">{authors}</p>'
+                 f'<p class="pub-status"><span class="status-dot" aria-hidden="true"></span>{E(pub.get("venue", ""))}{note}</p>'
+                 f'{link_buttons(pub.get("links"))}</div></li>')
+    publications = section("publications", "03", "Publications", f'<ol class="publications-list">{pubs}</ol>' if pubs else "")
+
+    education_rows = ""
+    for row in c.get("education", []):
+        period = f'<p class="education-period">{E(row["period"])}</p>' if row.get("period") else ""
+        detail = f'<p class="education-detail">{E(row["detail"])}</p>' if row.get("detail") else ""
+        education_rows += (f'<li><span class="education-symbol" aria-hidden="true">↗</span><div>'
+                           f'<h3>{text(row.get("place", ""))}</h3><p class="education-degree">{text(row["title"])}</p>{period}{detail}</div></li>')
+    education = section("education", "04", "Education", f'<ul class="education-list">{education_rows}</ul>' if education_rows else "")
+
+    academic = "".join(f'<div class="resume-entry"><h3>{text(row.get("place", ""))}</h3><p>{text(row["title"])}</p></div>'
+                       for row in c.get("education", []))
+    experience = "".join(f'<div class="resume-entry"><h3>{text(row["title"])}</h3><p>{text(row["description"])}</p></div>'
+                         for row in c.get("research_experience", []))
+    work = "".join(f'<div class="work-summary"><h3>{text(pub["title"])}</h3><p>{E(pub.get("venue", ""))}</p></div>'
+                   for pub in c.get("publications", []))
+    details = ""
+    for title, entries in (("Education", academic), ("Research experience", experience), ("Manuscripts", work)):
+        if entries:
+            details += f'<div class="resume-group"><p class="eyebrow">{title}</p>{entries}</div>'
+    about_page = section("about", "02", "About", f'<div class="about-layout">{profile_panel}<div class="resume-column">{details}</div></div>')
+
     contacts = []
     if p.get("email"):
-        contacts.append(("email", f"mailto:{p['email']}"))
+        contacts.append(f'<a class="contact-email" href="mailto:{E(p["email"])}">{E(p["email"])}<span aria-hidden="true">↗</span></a>')
+    social_links = ""
+    for key, url in p.get("links", {}).items():
+        if url and key in ICONS:
+            social_links += f'<a class="social-link" href="{E(url)}" rel="me noopener">{icon(key)}{E(LABELS[key])}<span aria-hidden="true">↗</span></a>'
     if p.get("cv"):
-        contacts.append(("cv", p["cv"]))
-    for k, u in p.get("links", {}).items():
-        if u and k in ICONS:
-            contacts.append((k, u))
-    contact_html = "".join(
-        f'<a class="contact" href="{E(u)}" rel="me noopener">{icon(k)}<span>{LABELS[k]}</span></a>' for k, u in contacts)
+        social_links += f'<a class="social-link" href="{E(p["cv"])}">{icon("cv")}CV<span aria-hidden="true">↗</span></a>'
+    note = f'<p class="contact-note">{text(p["contact_note"])}</p>' if p.get("contact_note") else ""
+    contact_body = f'<div class="contact-content">{note}{"".join(contacts)}<div class="social-links">{social_links}</div></div>' if contacts or social_links or note else ""
+    contact = section("contact", "05", "Contact", contact_body)
 
-    initials = "".join(w[0] for w in p["name"].split()[:2]).upper()
-    photo = (f'<img class="photo" src="{E(p["photo"])}" alt="{E(p["name"])}">' if p.get("photo")
-             else f'<div class="photo placeholder" aria-hidden="true">{E(initials)}</div>')
-    native = f' <span class="native">{E(p["name_native"])}</span>' if p.get("name_native") else ""
-
-    about = "".join(f"<p>{text(x)}</p>" for x in c.get("about", []))
-    if c.get("interests"):
-        about += '<ul class="chips">' + "".join(f"<li>{E(x)}</li>" for x in c["interests"]) + "</ul>"
-
-    me = p["name"]
-    pubs = ""
-    for pub in c.get("publications", []):
-        authors = E(pub.get("authors", "")).replace(E(me), f"<strong>{E(me)}</strong>")
-        note = f' <span class="note">{E(pub["note"])}</span>' if pub.get("note") else ""
-        pubs += (f'<li class="pub"><div class="pub-title">{text(pub["title"])}</div>'
-                 f'<div class="pub-authors">{authors}</div>'
-                 f'<div class="pub-venue">{E(pub.get("venue", ""))}{note}</div>{link_buttons(pub.get("links"))}</li>')
-    pubs = f'<ol class="pubs">{pubs}</ol>' if pubs else ""
-
-    def timeline(rows):
-        if not rows:
-            return ""
-        li = "".join(
-            f'<li><time>{E(r["period"])}</time><div><div class="tl-title">{text(r["title"])}</div>'
-            f'<div class="meta">{text(r.get("place", ""))}</div>'
-            + (f'<div class="tl-detail">{E(r["detail"])}</div>' if r.get("detail") else "") + "</div></li>"
-            for r in rows)
-        return f'<ul class="timeline">{li}</ul>'
-
-    contact = ""
-    if p.get("contact_note"):
-        contact += f"<p>{text(p['contact_note'])}</p>"
-    if contact_html:
-        contact += f'<div class="contacts">{contact_html}</div>'
-    elif not contact:
-        contact = '<p class="todo">TODO: add email / CV / profiles in content.json</p>'
-
-    sections = [
-        ("about", "About", about), ("publications", "Publications", pubs),
-        ("education", "Education", timeline(c.get("education"))), ("contact", "Contact", contact),
-    ]
-    nav = "".join(f'<a href="#{sid}">{E(t)}</a>' for sid, t, b in sections if b)
-    body = "".join(section(*x) for x in sections)
+    sections = [("home", "Home", hero), ("about", "About", about_page), ("publications", "Publications", publications),
+                ("education", "Education", education), ("contact", "Contact", contact)]
+    filenames = {sid: "index.html" if sid == "home" else f"{sid}.html" for sid, _, _ in sections}
+    nav_items = []
+    for sid, title, section_body in sections:
+        if section_body:
+            active = ' class="active" aria-current="page"' if sid == page_id else ""
+            nav_items.append(f'<a href="{filenames[sid]}"{active}><span>{E(title)}</span><span class="nav-arrow" aria-hidden="true">↗</span></a>')
+    nav = "".join(nav_items)
+    title, body = next((title, body) for sid, title, body in sections if sid == page_id)
+    page_title = s["title"] if page_id == "home" else f'{title} | {s["title"]}'
+    page_url = s["url"].rstrip("/") + ("/" if page_id == "home" else "/" + filenames[page_id])
     updated = s.get("updated") or dt.date.today().strftime("%B %Y")
-
-    return f"""<!doctype html>
-<html lang="en">
+    github = p.get("links", {}).get("github", "")
+    sidebar_github = f'<a class="sidebar-social" href="{E(github)}" aria-label="GitHub">{icon("github")}</a>' if github else ""
+    sidebar_email = f'<a class="sidebar-social" href="mailto:{E(p["email"])}" aria-label="Email">{icon("email")}</a>' if p.get("email") else ""
+    return f'''<!doctype html>
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{E(s["title"])}</title>
+<meta name="color-scheme" content="dark light">
+<title>{E(page_title)}</title>
 <meta name="description" content="{E(s["description"])}">
-<meta property="og:title" content="{E(s["title"])}">
+<meta property="og:title" content="{E(page_title)}">
 <meta property="og:description" content="{E(s["description"])}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="{E(s["url"])}">
-<link rel="canonical" href="{E(s["url"])}">
+<meta property="og:url" content="{E(page_url)}">
+<link rel="canonical" href="{E(page_url)}">
 <link rel="stylesheet" href="assets/style.css">
-<script>document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");</script>
+<script>try {{ document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark"; }} catch (_) {{}}</script>
 </head>
-<body>
-<nav class="topnav"><div class="wrap"><a class="brand" href="#">{E(p["name"])}</a><div class="links">{nav}</div>
-<button id="theme" class="theme" aria-label="Toggle dark mode">◐</button></div></nav>
-<main class="wrap">
-<header class="hero">{photo}<div>
-<h1>{E(p["name"])}{native}</h1>
-<div class="role">{E(p["role"])}</div>
-<div class="affil">{E(p["affiliation"])}{(" · " + E(p["location"])) if p.get("location") else ""}</div>
-</div></header>
-{body}
+<body id="top" class="page-{page_id}">
+<a class="skip-link" href="#main">Skip to content</a>
+<aside class="sidebar" aria-label="Site navigation">
+<a class="brand" href="index.html">{E(s["title"])}<span aria-hidden="true">.</span></a>
+<nav class="navigation" aria-label="Main navigation">{nav}</nav>
+<div class="sidebar-bottom"><div class="sidebar-socials">{sidebar_email}{sidebar_github}</div>
+<button id="theme" class="theme-toggle" aria-label="Switch to light theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Light mode</span></button>
+<p class="sidebar-credit">© {dt.date.today().year} {E(me)}<br>Seoul, Korea</p></div>
+</aside>
+<main id="main" class="main-content">{body}
+<footer><span>© {dt.date.today().year} {E(me)}</span><span>Last updated {E(updated)}</span><a href="#top">Back to top ↑</a></footer>
 </main>
-<footer class="wrap">© {dt.date.today().year} {E(p["name"])} · Last updated {E(updated)}</footer>
 <script src="assets/main.js"></script>
 </body>
 </html>
-"""
+'''
 
 
 def build():
@@ -151,10 +210,12 @@ def build():
     for extra in ("files", "images"):
         if os.path.isdir(os.path.join(ROOT, extra)):
             shutil.copytree(os.path.join(ROOT, extra), os.path.join(DIST, extra))
-    with open(os.path.join(DIST, "index.html"), "w", encoding="utf-8") as f:
-        f.write(render(content))
+    for page_id in ("home", "about", "publications", "education", "contact"):
+        filename = "index.html" if page_id == "home" else f"{page_id}.html"
+        with open(os.path.join(DIST, filename), "w", encoding="utf-8") as f:
+            f.write(render(content, page_id))
     open(os.path.join(DIST, ".nojekyll"), "w").close()
-    print(f"built {DIST}/index.html")
+    print(f"built 5 pages in {DIST}")
 
 
 if __name__ == "__main__":

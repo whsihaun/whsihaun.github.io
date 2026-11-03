@@ -2,6 +2,9 @@
 
 Personal academic homepage. Static, no dependencies.
 
+Five pages: Home (`index.html`), About, Publications, Education, and Contact.
+Home is portrait-free; About shows the profile and academic background.
+
 - **Edit content:** `content.json` (empty values hide items; `TODO` text is highlighted until replaced)
 - **Images / PDFs:** put them in `images/` or `files/` and reference them as `images/me.jpg`, `files/cv.pdf`
 - **Preview:** `python3 build.py --serve` → http://localhost:8000
