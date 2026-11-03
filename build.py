@@ -169,11 +169,11 @@ def render(c, page_id="home"):
     sidebar_github = f'<a class="sidebar-social" href="{E(github)}" aria-label="GitHub">{icon("github")}</a>' if github else ""
     sidebar_email = f'<a class="sidebar-social" href="mailto:{E(p["email"])}" aria-label="Email">{icon("email")}</a>' if p.get("email") else ""
     return f'''<!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="light dark">
 <title>{E(page_title)}</title>
 <meta name="description" content="{E(s["description"])}">
 <meta property="og:title" content="{E(page_title)}">
@@ -182,7 +182,7 @@ def render(c, page_id="home"):
 <meta property="og:url" content="{E(page_url)}">
 <link rel="canonical" href="{E(page_url)}">
 <link rel="stylesheet" href="assets/style.css">
-<script>try {{ document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark"; }} catch (_) {{}}</script>
+<script>try {{ document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"; }} catch (_) {{}}</script>
 </head>
 <body id="top" class="page-{page_id}">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -190,7 +190,7 @@ def render(c, page_id="home"):
 <a class="brand" href="index.html">{E(s["title"])}<span aria-hidden="true">.</span></a>
 <nav class="navigation" aria-label="Main navigation">{nav}</nav>
 <div class="sidebar-bottom"><div class="sidebar-socials">{sidebar_email}{sidebar_github}</div>
-<button id="theme" class="theme-toggle" aria-label="Switch to light theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Light mode</span></button>
+<button id="theme" class="theme-toggle" aria-label="Switch to dark theme"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Dark mode</span></button>
 <p class="sidebar-credit">© {dt.date.today().year} {E(me)}<br>Seoul, Korea</p></div>
 </aside>
 <main id="main" class="main-content">{body}
