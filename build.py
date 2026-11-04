@@ -57,7 +57,7 @@ def link_buttons(links):
         if not url:
             continue
         if key == "code":
-            out.append(f'<a class="btn btn-code" href="{E(url)}" aria-label="View code on GitHub">{icon("github")}<span>Code</span></a>')
+            out.append(f'<a class="btn btn-code" href="{E(url)}" aria-label="GitHub repository" title="GitHub repository">{icon("github")}</a>')
         else:
             out.append(f'<a class="btn" href="{E(url)}">{E(key)}</a>')
     return f'<div class="btns">{"".join(out)}</div>' if out else ""
