@@ -56,10 +56,12 @@ h1 .name-last { color: var(--fg); }
 .hero-affiliation { margin: 3px 0 20px; font-size: 13px; color: var(--muted); }
 .about-copy { max-width: 440px; color: var(--muted); font-size: 14px; line-height: 1.85; }
 .about-copy p { margin: 0 0 12px; }
-.hero-actions { margin-top: 28px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .button { display: inline-flex; align-items: center; justify-content: space-between; gap: 36px; min-height: 48px; padding: 12px 22px; font-size: 12px; font-weight: 600; }
 .button-primary { color: var(--bg); background: var(--fg); }
 .button-primary:hover { background: var(--accent); }
+.button-secondary { border: 1px solid var(--line); }
+.button-secondary:hover { border-color: var(--fg); }
 .button > span { font-size: 20px; font-weight: 400; }
 .hero-email { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); margin-top: 24px; font-size: 12px; }
 .hero-email:hover { color: var(--fg); }

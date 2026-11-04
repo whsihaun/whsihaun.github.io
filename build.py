@@ -69,6 +69,8 @@ def render(c, page_id="home"):
     interests = "".join(f'<li>{E(x)}</li>' for x in c.get("interests", []))
     interests_html = f'<ul class="interests" aria-label="Research interests">{interests}</ul>' if interests else ""
     research_link = '<a class="button button-primary" href="publications.html">View research <span aria-hidden="true">↗</span></a>' if c.get("publications") else ""
+    cv_link = (f'<a class="button button-secondary" href="{E(p["cv"])}">CV (PDF) <span aria-hidden="true">↗</span></a>'
+               if p.get("cv") else "")
     email_link = (f'<a class="hero-email" href="mailto:{E(p["email"])}">{icon("email")}<span>{E(p["email"])}</span></a>'
                   if p.get("email") else "")
     previews = ""
@@ -89,6 +91,8 @@ def render(c, page_id="home"):
     if github_url:
         github_name = github_url.rstrip("/").split("/")[-1]
         facts.append(f'<div><dt>GitHub</dt><dd><a href="{E(github_url)}" rel="me noopener">{E(github_name)} <span aria-hidden="true">↗</span></a></dd></div>')
+    if p.get("cv"):
+        facts.append(f'<div><dt>CV</dt><dd><a href="{E(p["cv"])}">View CV (PDF) <span aria-hidden="true">↗</span></a></dd></div>')
     facts_html = f'<dl class="profile-facts">{"".join(facts)}</dl>'
     location = f'<span>{E(p["location"])}</span>' if p.get("location") else ""
     hero = f'''<section id="home" class="hero" aria-labelledby="hero-name">
@@ -98,7 +102,7 @@ def render(c, page_id="home"):
 <p class="hero-role">{E(p["role"])}</p>
 <p class="hero-affiliation">{E(p["affiliation"])}</p>
 <div class="about-copy">{about}</div>
-<div class="hero-actions">{research_link}</div>
+<div class="hero-actions">{research_link}{cv_link}</div>
 {email_link}
 </div>{home_work}</div>
 <div class="hero-bottom">{interests_html}<a class="scroll-link" href="about.html">About me <span aria-hidden="true">↗</span></a></div>
