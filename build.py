@@ -30,6 +30,16 @@ def icon(name):
     return f'<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">{ICONS[name]}</svg>'
 
 
+def arrow(direction="up-right"):
+    paths = {
+        "right": "M5 12h14m-6-6 6 6-6 6",
+        "up-right": "M6 18 18 6M6 6h12v12",
+        "up": "M12 19V5m-6 6 6-6 6 6",
+    }
+    return (f'<svg class="arrow-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">'
+            f'<path d="{paths[direction]}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
 def is_todo(s):
     return isinstance(s, str) and s.strip().upper().startswith("TODO")
 
@@ -42,7 +52,14 @@ def text(s):
 
 
 def link_buttons(links):
-    out = [f'<a class="btn" href="{E(u)}">{E(k)}</a>' for k, u in (links or {}).items() if u]
+    out = []
+    for key, url in (links or {}).items():
+        if not url:
+            continue
+        if key == "code":
+            out.append(f'<a class="btn btn-code" href="{E(url)}" aria-label="View code on GitHub">{icon("github")}<span>Code</span></a>')
+        else:
+            out.append(f'<a class="btn" href="{E(url)}">{E(key)}</a>')
     return f'<div class="btns">{"".join(out)}</div>' if out else ""
 
 
@@ -68,15 +85,15 @@ def render(c, page_id="home"):
     about = "".join(f'<p>{text(x)}</p>' for x in c.get("about", []))
     interests = "".join(f'<li>{E(x)}</li>' for x in c.get("interests", []))
     interests_html = f'<ul class="interests" aria-label="Research interests">{interests}</ul>' if interests else ""
-    research_link = '<a class="button button-primary" href="publications.html">View research <span aria-hidden="true">↗</span></a>' if c.get("publications") else ""
-    cv_link = (f'<a class="button button-secondary" href="{E(p["cv"])}">CV (PDF) <span aria-hidden="true">↗</span></a>'
+    research_link = f'<a class="button button-primary" href="publications.html">View research <span aria-hidden="true">{arrow("right")}</span></a>' if c.get("publications") else ""
+    cv_link = (f'<a class="button button-secondary" href="{E(p["cv"])}">CV (PDF) <span aria-hidden="true">{arrow()}</span></a>'
                if p.get("cv") else "")
     email_link = (f'<a class="hero-email" href="mailto:{E(p["email"])}">{icon("email")}<span>{E(p["email"])}</span></a>'
                   if p.get("email") else "")
     previews = ""
     for index, pub in enumerate(c.get("publications", [])[:2], 1):
         previews += (f'<a class="home-work-item" href="publications.html#paper-{index}">'
-                     f'<div class="home-work-topline"><span>{index:02d}</span><span aria-hidden="true">↗</span></div>'
+                     f'<div class="home-work-topline"><span>{index:02d}</span><span aria-hidden="true">{arrow()}</span></div>'
                      f'<h3>{text(pub.get("short_title", pub["title"]))}</h3>'
                      f'<p class="home-work-title">{text(pub["title"])}</p>'
                      f'<p class="home-work-status">{E(pub.get("venue", ""))}</p></a>')
@@ -90,9 +107,9 @@ def render(c, page_id="home"):
     github_url = p.get("links", {}).get("github")
     if github_url:
         github_name = github_url.rstrip("/").split("/")[-1]
-        facts.append(f'<div><dt>GitHub</dt><dd><a href="{E(github_url)}" rel="me noopener">{E(github_name)} <span aria-hidden="true">↗</span></a></dd></div>')
+        facts.append(f'<div><dt>GitHub</dt><dd><a href="{E(github_url)}" rel="me noopener">{E(github_name)} <span aria-hidden="true">{arrow()}</span></a></dd></div>')
     if p.get("cv"):
-        facts.append(f'<div><dt>CV</dt><dd><a href="{E(p["cv"])}">View CV (PDF) <span aria-hidden="true">↗</span></a></dd></div>')
+        facts.append(f'<div><dt>CV</dt><dd><a href="{E(p["cv"])}">View CV (PDF) <span aria-hidden="true">{arrow()}</span></a></dd></div>')
     facts_html = f'<dl class="profile-facts">{"".join(facts)}</dl>'
     location = f'<span>{E(p["location"])}</span>' if p.get("location") else ""
     hero = f'''<section id="home" class="hero" aria-labelledby="hero-name">
@@ -105,7 +122,7 @@ def render(c, page_id="home"):
 <div class="hero-actions">{research_link}{cv_link}</div>
 {email_link}
 </div>{home_work}</div>
-<div class="hero-bottom">{interests_html}<a class="scroll-link" href="about.html">About me <span aria-hidden="true">↗</span></a></div>
+<div class="hero-bottom">{interests_html}<a class="scroll-link" href="about.html">About me <span aria-hidden="true">{arrow()}</span></a></div>
 </section>'''
     profile_panel = f'''<div class="profile-panel"><div class="portrait-composition">
 <div class="portrait-orbit orbit-one" aria-hidden="true"></div><div class="portrait-orbit orbit-two" aria-hidden="true"></div>
@@ -127,7 +144,7 @@ def render(c, page_id="home"):
     for row in c.get("education", []):
         period = f'<p class="education-period">{E(row["period"])}</p>' if row.get("period") else ""
         detail = f'<p class="education-detail">{E(row["detail"])}</p>' if row.get("detail") else ""
-        education_rows += (f'<li><span class="education-symbol" aria-hidden="true">↗</span><div>'
+        education_rows += (f'<li><span class="education-symbol" aria-hidden="true">{arrow()}</span><div>'
                            f'<h3>{text(row.get("place", ""))}</h3><p class="education-degree">{text(row["title"])}</p>{period}{detail}</div></li>')
     education = section("education", "04", "Education", f'<ul class="education-list">{education_rows}</ul>' if education_rows else "")
 
@@ -145,13 +162,13 @@ def render(c, page_id="home"):
 
     contacts = []
     if p.get("email"):
-        contacts.append(f'<a class="contact-email" href="mailto:{E(p["email"])}">{E(p["email"])}<span aria-hidden="true">↗</span></a>')
+        contacts.append(f'<a class="contact-email" href="mailto:{E(p["email"])}">{E(p["email"])}<span aria-hidden="true">{arrow()}</span></a>')
     social_links = ""
     for key, url in p.get("links", {}).items():
         if url and key in ICONS:
-            social_links += f'<a class="social-link" href="{E(url)}" rel="me noopener">{icon(key)}{E(LABELS[key])}<span aria-hidden="true">↗</span></a>'
+            social_links += f'<a class="social-link" href="{E(url)}" rel="me noopener">{icon(key)}{E(LABELS[key])}<span aria-hidden="true">{arrow()}</span></a>'
     if p.get("cv"):
-        social_links += f'<a class="social-link" href="{E(p["cv"])}">{icon("cv")}CV<span aria-hidden="true">↗</span></a>'
+        social_links += f'<a class="social-link" href="{E(p["cv"])}">{icon("cv")}CV<span aria-hidden="true">{arrow()}</span></a>'
     note = f'<p class="contact-note">{text(p["contact_note"])}</p>' if p.get("contact_note") else ""
     contact_body = f'<div class="contact-content">{note}{"".join(contacts)}<div class="social-links">{social_links}</div></div>' if contacts or social_links or note else ""
     contact = section("contact", "05", "Contact", contact_body)
@@ -163,7 +180,7 @@ def render(c, page_id="home"):
     for sid, title, section_body in sections:
         if section_body:
             active = ' class="active" aria-current="page"' if sid == page_id else ""
-            nav_items.append(f'<a href="{filenames[sid]}"{active}><span>{E(title)}</span><span class="nav-arrow" aria-hidden="true">↗</span></a>')
+            nav_items.append(f'<a href="{filenames[sid]}"{active}><span>{E(title)}</span><span class="nav-arrow" aria-hidden="true">{arrow()}</span></a>')
     nav = "".join(nav_items)
     title, body = next((title, body) for sid, title, body in sections if sid == page_id)
     page_title = s["title"] if page_id == "home" else f'{title} | {s["title"]}'
@@ -198,7 +215,7 @@ def render(c, page_id="home"):
 <p class="sidebar-credit">© {dt.date.today().year} {E(me)}<br>Seoul, Korea</p></div>
 </aside>
 <main id="main" class="main-content">{body}
-<footer><span>© {dt.date.today().year} {E(me)}</span><span>Last updated {E(updated)}</span><a href="#top">Back to top ↑</a></footer>
+<footer><span>© {dt.date.today().year} {E(me)}</span><span>Last updated {E(updated)}</span><a href="#top">Back to top {arrow("up")}</a></footer>
 </main>
 <script src="assets/main.js"></script>
 </body>

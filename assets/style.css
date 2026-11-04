@@ -62,7 +62,8 @@ h1 .name-last { color: var(--fg); }
 .button-primary:hover { background: var(--accent); }
 .button-secondary { border: 1px solid var(--line); }
 .button-secondary:hover { border-color: var(--fg); }
-.button > span { font-size: 20px; font-weight: 400; }
+.button > span { font-size: 16px; font-weight: 400; }
+.arrow-icon { display: inline-block; width: 1em; height: 1em; vertical-align: -.12em; flex-shrink: 0; }
 .hero-email { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); margin-top: 24px; font-size: 12px; }
 .hero-email:hover { color: var(--fg); }
 .profile-panel { width: 100%; max-width: 340px; min-width: 0; justify-self: end; }
@@ -98,6 +99,8 @@ h3 { font-weight: 500; }
 .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
 .btn { font-size: 12px; padding-bottom: 2px; border-bottom: 1px solid var(--accent); }
 .btn:hover { color: var(--accent); }
+.btn-code { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; }
+.btn-code svg { width: 16px; height: 16px; flex-shrink: 0; }
 #education { display: grid; grid-template-columns: 1fr 1.3fr; align-items: start; gap: 48px; }
 #education .section-heading { margin-bottom: 0; }
 .education-list { list-style: none; margin: 10px 0 0; padding: 0; }
